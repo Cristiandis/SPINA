@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      S.P.I.N.A. - Simulatore Posturale Interattivo per Navicelle e Astronauti
+    </title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="poster">
+      <!-- titolo -->
+      <header class="title-col">
+        <h1>S.P.I.N.A.</h1>
+        <p class="subtitle">
+          Simulatore Posturale Interattivo per Navicelle e Astronauti
+        </p>
+        <p class="intro">
+          In microgravità la colonna si allunga e le curve si riducono. Con i
+          cursori si cambiano allungamento, tensione muscolare e inclinazione
+          del busto.
+        </p>
+        <div class="accessibility-bar" role="region" aria-label="Accessibilità">
+          <button onclick="toggleContrast()">Contrasto elevato</button>
+        </div>
+      </header>
+
+      <!-- canvas -->
+      <div class="canvas-col">
+        <section class="panel" aria-label="Colonna vertebrale">
+          <h2>Colonna vertebrale</h2>
+          <div class="panel-body spine-visualizer">
+            <canvas id="physicsCanvas" width="320" height="580"></canvas>
+            <small class="hint"
+              >Le vertebre si possono trascinare con il mouse.</small
+            >
+          </div>
+        </section>
+      </div>
+
+      <!-- parametri, stato e legenda -->
+      <div class="params-col">
+        <section class="panel" aria-label="Parametri">
+          <h2>Parametri</h2>
+          <div class="panel-body">
+            <div class="control-group">
+              <label for="elongation"
+                >Allungamento in microgravità:
+                <span id="valElong">35</span> mm</label
+              >
+              <input
+                type="range"
+                id="elongation"
+                min="0"
+                max="70"
+                value="35"
+                oninput="updatePhysicsParams()"
+              />
+              <small class="hint"
+                >Aumenta la distanza tra le vertebre e appiattisce le
+                curve.</small
+              >
+            </div>
+
+            <div class="control-group">
+              <label for="tension"
+                >Tensione dei muscoli paravertebrali (EMG):
+                <span id="valTension">40</span>%</label
+              >
+              <input
+                type="range"
+                id="tension"
+                min="0"
+                max="100"
+                value="40"
+                oninput="updatePhysicsParams()"
+              />
+              <small class="hint"
+                >Rende la colonna più rigida e la comprime leggermente.</small
+              >
+            </div>
+
+            <div class="control-group">
+              <label for="flexion"
+                >Inclinazione del busto: <span id="valFlex">0</span>°</label
+              >
+              <input
+                type="range"
+                id="flexion"
+                min="-25"
+                max="35"
+                value="0"
+                oninput="updatePhysicsParams()"
+              />
+              <small class="hint"
+                >Valori positivi: flessione in avanti. Valori negativi:
+                estensione.</small
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="panel routine-box" aria-label="Stato">
+          <h2>Stato</h2>
+          <div class="panel-body" aria-live="polite">
+            <strong id="statusTitle">Decompressione moderata</strong>
+            <p id="routineDesc">
+              I dischi si allungano e le curve a S si riducono un po'.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel" aria-label="Legenda">
+          <h2>Legenda</h2>
+          <div class="panel-body legend">
+            <span><i style="background: #2f6db5"></i> Cervicali (C1-C7)</span>
+            <span><i style="background: #3d9a5a"></i> Toraciche (T1-T12)</span>
+            <span><i style="background: #e0a21b"></i> Lombari (L1-L5)</span>
+            <span><i style="background: #d1483a"></i> Sacro e coccige</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
