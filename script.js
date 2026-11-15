@@ -4,13 +4,13 @@ const ctx = canvas.getContext("2d");
 let physicsState = {
   elongation: 35, // mm, 0-70
   tension: 40, // %, 0-100
-  flexion: 0, // gradi, da -25 a 35
+  flexion: 0, // degrees, from -25 to 35
 };
 
-// 7 cervicali, 12 toraciche, 5 lombari, sacro, coccige
-// curveX sposta ogni vertebra di lato e disegna la curva a S
+// 7 cervical, 12 thoracic, 5 lumbar, sacrum, coccyx
+// curveX shifts each vertebra sideways and draws the S curve
 const SPINE_DATA = [
-  // cervicali
+  // cervical
   { label: "C1", region: "C", w: 18, h: 6, curveX: 6 },
   { label: "C2", region: "C", w: 19, h: 7, curveX: 9 },
   { label: "C3", region: "C", w: 20, h: 7, curveX: 11 },
@@ -18,7 +18,7 @@ const SPINE_DATA = [
   { label: "C5", region: "C", w: 22, h: 8, curveX: 11 },
   { label: "C6", region: "C", w: 23, h: 8, curveX: 8 },
   { label: "C7", region: "C", w: 24, h: 9, curveX: 4 },
-  // toraciche
+  // thoracic
   { label: "T1", region: "T", w: 25, h: 9, curveX: -2 },
   { label: "T2", region: "T", w: 26, h: 10, curveX: -7 },
   { label: "T3", region: "T", w: 26, h: 10, curveX: -12 },
@@ -31,18 +31,18 @@ const SPINE_DATA = [
   { label: "T10", region: "T", w: 33, h: 12, curveX: -9 },
   { label: "T11", region: "T", w: 34, h: 13, curveX: -4 },
   { label: "T12", region: "T", w: 35, h: 13, curveX: 2 },
-  // lombari
+  // lumbar
   { label: "L1", region: "L", w: 37, h: 14, curveX: 8 },
   { label: "L2", region: "L", w: 39, h: 15, curveX: 14 },
   { label: "L3", region: "L", w: 41, h: 15, curveX: 18 },
   { label: "L4", region: "L", w: 42, h: 15, curveX: 16 },
   { label: "L5", region: "L", w: 43, h: 15, curveX: 10 },
-  // sacro e coccige
-  { label: "Sacro", region: "S", w: 38, h: 24, curveX: -6 },
-  { label: "Coccige", region: "S", w: 16, h: 12, curveX: -12 },
+  // sacrum and coccyx
+  { label: "Sacrum", region: "S", w: 38, h: 24, curveX: -6 },
+  { label: "Coccyx", region: "S", w: 16, h: 12, curveX: -12 },
 ];
 
-// stessi colori della legenda in index.html
+// same colors as the legend in index.html
 const REGION_COLORS = {
   C: "#2f6db5",
   T: "#3d9a5a",
@@ -60,7 +60,7 @@ let vertebrae = SPINE_DATA.map((d, i) => ({
   angle: 0,
 }));
 
-// trascinamento con il mouse
+// dragging with the mouse
 let draggedNode = null;
 let mousePos = { x: 0, y: 0 };
 
@@ -108,19 +108,19 @@ function updateUIStatus() {
   const stress = physicsState.elongation * 0.65 + physicsState.tension * 0.45;
 
   let color = "#3a7d44";
-  let title = "Condizione normale";
+  let title = "Normal condition";
   let desc =
-    "Le curve sono ancora ben marcate e la distanza tra le vertebre è vicina al normale.";
+    "The curves are still well defined and the distance between the vertebrae is close to normal.";
 
   if (stress > 70) {
     color = "#b3261e";
-    title = "Allungamento e tensione elevati";
+    title = "High elongation and tension";
     desc =
-      "Le curve sono molto appiattite, soprattutto la lordosi lombare, e i muscoli paravertebrali sono molto tesi.";
+      "The curves are very flat, especially the lumbar lordosis, and the paravertebral muscles are very tense.";
   } else if (stress > 40) {
     color = "#b8860b";
-    title = "Decompressione moderata";
-    desc = "I dischi si allungano e le curve a S si riducono un po'.";
+    title = "Moderate decompression";
+    desc = "The discs lengthen and the S-shaped curves flatten slightly.";
   }
 
   document.documentElement.style.setProperty("--spine-color", color);
@@ -132,18 +132,18 @@ function toggleContrast() {
   document.body.classList.toggle("high-contrast");
 }
 
-// loop principale: molle + smorzamento
+// main loop: springs + damping
 function runPhysicsEngine() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // l'allungamento riduce le curve (fino al 65%)
+  // elongation reduces the curves (up to 65%)
   const curveRetention = Math.max(0.35, 1 - physicsState.elongation / 110);
 
-  // distanza verticale: cresce con l'allungamento, cala un po' con la tensione
+  // vertical spacing: grows with elongation, shrinks a little with tension
   const spacingFactor =
     1 + physicsState.elongation * 0.0042 - physicsState.tension * 0.0008;
 
-  // rigidità delle molle e smorzamento
+  // spring stiffness and damping
   const k = 0.14 + physicsState.tension * 0.0025;
   const damping = 0.78;
   const baseX = 160;
@@ -157,7 +157,7 @@ function runPhysicsEngine() {
     let stepY = (v.h + 4.8) * spacingFactor;
     if (i > 0) currentY += stepY;
 
-    // l'inclinazione si sente di più in alto, il sacro è quasi fermo
+    // tilt is felt more at the top, the sacrum barely moves
     let mobility = i < 24 ? Math.pow((24 - i) / 24, 1.35) : 0.05;
     let flexionOffset = physicsState.flexion * 1.4 * mobility;
 
@@ -170,17 +170,17 @@ function runPhysicsEngine() {
       v.vx = 0;
       v.vy = 0;
     } else {
-      // molla verso la posizione target
+      // spring toward the target position
       let fx = (targetX - v.x) * k;
       let fy = (targetY - v.y) * k;
 
-      // la vertebra precedente trascina un po' questa
+      // the previous vertebra pulls this one slightly
       if (i > 0) {
         let prev = vertebrae[i - 1];
         fx += (prev.x - v.x) * 0.04;
       }
 
-      // piccolo movimento continuo
+      // small continuous motion
       let microFloat =
         Math.sin(Date.now() / 500 + i * 0.35) *
         (0.25 + physicsState.elongation * 0.005);
@@ -193,14 +193,14 @@ function runPhysicsEngine() {
     }
   }
 
-  // angolo di ogni vertebra dai vicini
+  // angle of each vertebra from its neighbors
   for (let i = 0; i < vertebrae.length; i++) {
     let prev = i > 0 ? vertebrae[i - 1] : vertebrae[i];
     let next = i < vertebrae.length - 1 ? vertebrae[i + 1] : vertebrae[i];
     vertebrae[i].angle = Math.atan2(next.x - prev.x, next.y - prev.y);
   }
 
-  // linea dietro le vertebre
+  // line behind the vertebrae
   ctx.beginPath();
   ctx.moveTo(vertebrae[0].x, vertebrae[0].y);
   for (let i = 1; i < vertebrae.length; i++) {
@@ -210,7 +210,7 @@ function runPhysicsEngine() {
   ctx.lineWidth = 6;
   ctx.stroke();
 
-  // 23 dischi, da C2 al sacro (tra C1 e C2 non c'è disco)
+  // 23 discs, from C2 to the sacrum (no disc between C1 and C2)
   for (let i = 1; i < 24; i++) {
     let v1 = vertebrae[i];
     let v2 = vertebrae[i + 1];
@@ -231,7 +231,7 @@ function runPhysicsEngine() {
     ctx.fill();
   }
 
-  // vertebre
+  // vertebrae
   vertebrae.forEach((v, i) => {
     ctx.save();
     ctx.translate(v.x, v.y);
@@ -239,7 +239,7 @@ function runPhysicsEngine() {
 
     let color = REGION_COLORS[v.region];
 
-    // processo spinoso (verso sinistra)
+    // spinous process (toward the left)
     ctx.beginPath();
     ctx.moveTo(-v.w / 2, -v.h * 0.25);
     ctx.lineTo(
@@ -250,15 +250,15 @@ function runPhysicsEngine() {
     ctx.fillStyle = color;
     ctx.fill();
 
-    // corpo vertebrale (sacro e coccige hanno forma a trapezio/triangolo)
+    // vertebral body (sacrum and coccyx are trapezoid/triangle shaped)
     ctx.beginPath();
-    if (v.label === "Sacro") {
+    if (v.label === "Sacrum") {
       ctx.moveTo(-v.w / 2, -v.h / 2);
       ctx.lineTo(v.w / 2, -v.h / 2);
       ctx.lineTo(v.w * 0.22, v.h / 2);
       ctx.lineTo(-v.w * 0.22, v.h / 2);
       ctx.closePath();
-    } else if (v.label === "Coccige") {
+    } else if (v.label === "Coccyx") {
       ctx.moveTo(-v.w / 2, -v.h / 2);
       ctx.lineTo(v.w / 2, -v.h / 2);
       ctx.lineTo(0, v.h / 2);
@@ -273,9 +273,9 @@ function runPhysicsEngine() {
     ctx.strokeStyle = "#333333";
     ctx.stroke();
 
-    // etichette solo su alcune vertebre
-    if (["C1", "C7", "T6", "T12", "L3", "L5", "Sacro"].includes(v.label)) {
-      ctx.rotate(v.angle); // testo dritto
+    // labels only on some vertebrae
+    if (["C1", "C7", "T6", "T12", "L3", "L5", "Sacrum"].includes(v.label)) {
+      ctx.rotate(v.angle); // upright text
       ctx.fillStyle = "#333333";
       ctx.font = "11px Arial, sans-serif";
       ctx.textAlign = "left";

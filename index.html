@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,43 +10,42 @@
   </head>
   <body>
     <main class="poster">
-      <!-- titolo -->
+      <!-- title -->
       <header class="title-col">
         <h1>S.P.I.N.A.</h1>
         <p class="subtitle">
           Simulatore Posturale Interattivo per Navicelle e Astronauti
         </p>
         <p class="intro">
-          In microgravità la colonna si allunga e le curve si riducono. Con i
-          cursori si cambiano allungamento, tensione muscolare e inclinazione
-          del busto.
+          In microgravity the spine lengthens and its curves flatten. Use the
+          sliders to change elongation, muscle tension and trunk tilt.
         </p>
-        <div class="accessibility-bar" role="region" aria-label="Accessibilità">
-          <button onclick="toggleContrast()">Contrasto elevato</button>
+        <div class="accessibility-bar" role="region" aria-label="Accessibility">
+          <button onclick="toggleContrast()">High contrast</button>
         </div>
       </header>
 
       <!-- canvas -->
       <div class="canvas-col">
-        <section class="panel" aria-label="Colonna vertebrale">
-          <h2>Colonna vertebrale</h2>
+        <section class="panel" aria-label="Spine">
+          <h2>Spine</h2>
           <div class="panel-body spine-visualizer">
             <canvas id="physicsCanvas" width="320" height="580"></canvas>
             <small class="hint"
-              >Le vertebre si possono trascinare con il mouse.</small
+              >The vertebrae can be dragged with the mouse.</small
             >
           </div>
         </section>
       </div>
 
-      <!-- parametri, stato e legenda -->
+      <!-- parameters, status and legend -->
       <div class="params-col">
-        <section class="panel" aria-label="Parametri">
-          <h2>Parametri</h2>
+        <section class="panel" aria-label="Parameters">
+          <h2>Parameters</h2>
           <div class="panel-body">
             <div class="control-group">
               <label for="elongation"
-                >Allungamento in microgravità:
+                >Microgravity elongation:
                 <span id="valElong">35</span> mm</label
               >
               <input
@@ -58,14 +57,14 @@
                 oninput="updatePhysicsParams()"
               />
               <small class="hint"
-                >Aumenta la distanza tra le vertebre e appiattisce le
-                curve.</small
+                >Increases the distance between the vertebrae and flattens the
+                curves.</small
               >
             </div>
 
             <div class="control-group">
               <label for="tension"
-                >Tensione dei muscoli paravertebrali (EMG):
+                >Paravertebral muscle tension (EMG):
                 <span id="valTension">40</span>%</label
               >
               <input
@@ -77,13 +76,13 @@
                 oninput="updatePhysicsParams()"
               />
               <small class="hint"
-                >Rende la colonna più rigida e la comprime leggermente.</small
+                >Makes the spine stiffer and compresses it slightly.</small
               >
             </div>
 
             <div class="control-group">
               <label for="flexion"
-                >Inclinazione del busto: <span id="valFlex">0</span>°</label
+                >Trunk tilt: <span id="valFlex">0</span>°</label
               >
               <input
                 type="range"
@@ -94,30 +93,30 @@
                 oninput="updatePhysicsParams()"
               />
               <small class="hint"
-                >Valori positivi: flessione in avanti. Valori negativi:
-                estensione.</small
+                >Positive values: forward flexion. Negative values:
+                extension.</small
               >
             </div>
           </div>
         </section>
 
-        <section class="panel routine-box" aria-label="Stato">
-          <h2>Stato</h2>
+        <section class="panel routine-box" aria-label="Status">
+          <h2>Status</h2>
           <div class="panel-body" aria-live="polite">
-            <strong id="statusTitle">Decompressione moderata</strong>
+            <strong id="statusTitle">Moderate decompression</strong>
             <p id="routineDesc">
-              I dischi si allungano e le curve a S si riducono un po'.
+              The discs lengthen and the S-shaped curves flatten slightly.
             </p>
           </div>
         </section>
 
-        <section class="panel" aria-label="Legenda">
-          <h2>Legenda</h2>
+        <section class="panel" aria-label="Legend">
+          <h2>Legend</h2>
           <div class="panel-body legend">
-            <span><i style="background: #2f6db5"></i> Cervicali (C1-C7)</span>
-            <span><i style="background: #3d9a5a"></i> Toraciche (T1-T12)</span>
-            <span><i style="background: #e0a21b"></i> Lombari (L1-L5)</span>
-            <span><i style="background: #d1483a"></i> Sacro e coccige</span>
+            <span><i style="background: #2f6db5"></i> Cervical (C1-C7)</span>
+            <span><i style="background: #3d9a5a"></i> Thoracic (T1-T12)</span>
+            <span><i style="background: #e0a21b"></i> Lumbar (L1-L5)</span>
+            <span><i style="background: #d1483a"></i> Sacrum and coccyx</span>
           </div>
         </section>
       </div>
